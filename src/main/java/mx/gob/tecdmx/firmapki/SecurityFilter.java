@@ -21,7 +21,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-
+//	seguridad.url.api
+//	@Value("${firma.url.security}")
+//
 	@Value("${firma.url.security}")
 	private String securityUrl;
 	Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
@@ -63,10 +65,13 @@ public class SecurityFilter extends OncePerRequestFilter {
 		HttpPost post = new HttpPost(securityUrl);
 		post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		post.addHeader("Authorization", token);
+		System.out.println("# isTokenValid [" + token + "]");
 		try {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			CloseableHttpResponse response = httpClient.execute(post);
 			String json = EntityUtils.toString(response.getEntity());
+			System.out.println("# json");
+			System.out.println( json );
 			request.setAttribute("userdata", json);
 			logger.info("la sesion esta activa", token);
 			return true;
