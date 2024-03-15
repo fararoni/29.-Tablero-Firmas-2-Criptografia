@@ -36,7 +36,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 		if (request.getQueryString() != null) {
 			url.append('?').append(request.getQueryString());
 		}
-		System.out.println(url);
+		System.out.println("SecurityFilter.doFilterInternal [" + url + "]");
 
 		if (url.toString().contains("/api/escritorio/login-escritorio")) {
 			logger.info("sesion activa, redireccionando");
@@ -62,7 +62,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 	}
 
 	private boolean isTokenValid(String token, HttpServletRequest request) {
+
+		logger.info("securityUrl",securityUrl);
+
 		HttpPost post = new HttpPost(securityUrl);
+
 		post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		post.addHeader("Authorization", token);
 		System.out.println("# isTokenValid [" + token + "]");
@@ -77,6 +81,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 			return true;
 
 		} catch (Exception e) {
+			logger.error("isTokenValid",e.getMessage());
 			return false;
 		}
 

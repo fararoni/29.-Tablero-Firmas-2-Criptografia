@@ -116,6 +116,7 @@ public class RestControllerDocumento {
 	@CrossOrigin()
 	@RequestMapping(method = RequestMethod.GET, path = "/documentos-usuario", produces = "application/json")
 	public ResponseEntity<DTOResponse> documentosUsuario(HttpServletRequest request) {
+
 		DTOResponse res = new DTOResponse();
 		DTOResponseUserInfo userInfo = serviceSecurity.getUserInfo(request, res);
 		serviceDocumentoByUsuario.getDocumentosByUsuario(res, userInfo);

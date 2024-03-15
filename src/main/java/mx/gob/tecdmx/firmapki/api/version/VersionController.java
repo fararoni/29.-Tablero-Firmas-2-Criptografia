@@ -12,7 +12,7 @@ public class VersionController {
 	@CrossOrigin()
 	@RequestMapping(method = RequestMethod.GET, path = "/", produces = "application/json")
 	public String version() {
-		return "Firma-PKI v1.0";
+		return "API-PKI v1.0";
 	}
 	
 }
