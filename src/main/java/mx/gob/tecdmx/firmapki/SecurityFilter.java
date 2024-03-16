@@ -36,17 +36,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 		if (request.getQueryString() != null) {
 			url.append('?').append(request.getQueryString());
 		}
-		System.out.println("SecurityFilter.doFilterInternal [" + url + "]");
+		logger.info("SecurityFilter.doFilterInternal [" + url + "]");
 
 		if (url.toString().contains("/api/escritorio/login-escritorio")) {
-			logger.info("sesion activa, redireccionando");
+			logger.info("sesion activa, redireccionando-escritorio");
 			filterChain.doFilter(request, response);
 		} else {
 
 			String token = request.getHeader("Authorization");
 			if (token != null && token.startsWith("Bearer")) {
 				if (isTokenValid(token, request)) {
-					logger.info("sesion activa, redireccionando");
+					logger.info("doFilterInternal().sesion activa, redireccionando");
 					filterChain.doFilter(request, response);
 				} else {
 					logger.info("token invalido", token);
@@ -63,21 +63,21 @@ public class SecurityFilter extends OncePerRequestFilter {
 
 	private boolean isTokenValid(String token, HttpServletRequest request) {
 
-		logger.info("securityUrl",securityUrl);
+		logger.info("isTokenValid() securityUrl",securityUrl);
 
 		HttpPost post = new HttpPost(securityUrl);
 
 		post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 		post.addHeader("Authorization", token);
-		System.out.println("# isTokenValid [" + token + "]");
+		logger.info("# isTokenValid [" + token + "]");
 		try {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			CloseableHttpResponse response = httpClient.execute(post);
 			String json = EntityUtils.toString(response.getEntity());
-			System.out.println("# json");
-			System.out.println( json );
+			logger.info("# json");
+			logger.info( json );
 			request.setAttribute("userdata", json);
-			logger.info("la sesion esta activa", token);
+			logger.info("isTokenValid(). la sesion esta activa", token);
 			return true;
 
 		} catch (Exception e) {
